@@ -10,28 +10,39 @@
             text-align: center;
             background-color: #ab85a4;
             color: #301003;
-            padding: 60px;
+            padding: 100px;
         }
         button {
-            background-color: red;
+            background-color: #301003;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 30px 40px;
+            font-size: 22px;
             cursor: pointer;
             margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <h1>Merhaba Dünya!</h1>
-    <p>Bu basit bir HTML sayfasıdır.</p>
-    <button onclick="selamVer()">Bana Tıkla</button>
+    <h1>Test Aşamasısındadır!</h1>
+    <p>Kafama ne eserse onu eklerim kaaardeşşş!</p>
+    <button onclick="basma()">Basma</button>
 
-    <script>
-        function selamVer() {
-            alert('Selamlar! Basit web sitesi çalışıyor.');
-        }
+<script>
+    function basma() {
+        alert("Niye bastın ki?");
+        
+        setTimeout(function() {
+            var videoURL = "https://youtu.be/iTQoC5KqkeA?si=9adD67uPzAqxR1Kq";
+            var newWindow = window.open(videoURL, "_blank");
+
+            setTimeout(function() {
+                newWindow.document.documentElement.requestFullscreen();
+            }, 1000); // 1 saniye bekleme
+        }, 10000); // 10 saniye
+    }
+</script>
+    
     </script>
 </body>
 </html>
