@@ -13,7 +13,7 @@
       margin: 0;
       padding: 20px;
       position: relative;
-      overflow: hidden; /* Ekran dışına taşan nesneleri gizlemek için */
+      overflow: hidden; /* Ekran dışına taşan nesneleri gizler */
     }
     #content {
       margin-top: 50px;
@@ -35,7 +35,7 @@
     button:hover {
       background-color: #a11f24;
     }
-    /* Arka planda müzik oynatmak için YouTube iframe'i ekrandan taşırız */
+    /* Arka plan müziği için YouTube iframe'i ekran dışına konumlandırıyoruz */
     #bgVideo {
       position: absolute;
       width: 1px;
@@ -55,6 +55,7 @@
       position: absolute;
       font-size: 40px;
       z-index: 500;
+      transition: left 1.5s ease, top 1.5s ease;
     }
   </style>
 </head>
@@ -67,7 +68,7 @@
   
   <div id="message" style="display: none;"></div>
   
-  <!-- Arka planda müzik oynatmak için gizli YouTube iframe -->
+  <!-- Arka planda müzik çalması için YouTube embed iframe -->
   <iframe id="bgVideo" 
     src="https://www.youtube.com/embed/JgMRdt0w8ho?autoplay=1&mute=0&controls=0&loop=1&playlist=JgMRdt0w8ho" 
     frameborder="0" 
@@ -76,51 +77,81 @@
   </iframe>
   
   <script>
+    const initialSheepCount = 5;
+    let sheepSpeedInterval = 2000; // koyunların yeni konuma geçme süresi (ms)
+    
     document.getElementById("playButton").addEventListener("click", function() {
-      // Ana içerik gizlensin, mesaj gösterilsin
+      // Butona tıklandığında, ana içerik gizlenip mesaj gösterilsin.
       document.getElementById("content").style.display = "none";
-      var messageDiv = document.getElementById("message");
+      const messageDiv = document.getElementById("message");
       messageDiv.innerHTML = "<h2>3. taraf çerezleri kapat ve müziğin tadını çıkar</h2>";
       messageDiv.style.display = "block";
       
-      // 5 saniye sonra kurt ve koyun nesneleri ekranda belirsin
+      // 5 saniye sonra, kurt ve koyunların ekranda belirlemesini başlat.
       setTimeout(spawnWolfAndSheep, 5000);
     });
     
+    // Rastgele konum döndüren yardımcı fonksiyon
+    function getRandomPosition(elementWidth, elementHeight) {
+      const x = Math.random() * (window.innerWidth - elementWidth);
+      const y = Math.random() * (window.innerHeight - elementHeight);
+      return { x, y };
+    }
+    
+    // Yeni koyun oluşturma fonksiyonu
+    function spawnSheep() {
+      const sheep = document.createElement("div");
+      sheep.className = "sheep";
+      sheep.textContent = "🐑";
+      // Başlangıç konumunu belirle (yaklaşık 40px genişlik)
+      const pos = getRandomPosition(50, 50);
+      sheep.style.left = pos.x + "px";
+      sheep.style.top = pos.y + "px";
+      document.body.appendChild(sheep);
+      
+      // Koyuna rastgele hareket ettirme intervali ata
+      sheep.moveInterval = setInterval(() => {
+        const newPos = getRandomPosition(50, 50);
+        sheep.style.left = newPos.x + "px";
+        sheep.style.top = newPos.y + "px";
+      }, sheepSpeedInterval);
+      
+      return sheep;
+    }
+    
+    // Wolf (kurt) ve koyunların oluşturulması ve hareketleri
     function spawnWolfAndSheep() {
-      // Rastgele koyunları oluştur (örneğin 5 tane)
-      const numSheep = 5;
-      for (let i = 0; i < numSheep; i++) {
-        let sheep = document.createElement("div");
-        sheep.className = "sheep";
-        sheep.textContent = "🐑";
-        sheep.style.left = Math.random() * (window.innerWidth - 50) + "px";
-        sheep.style.top = Math.random() * (window.innerHeight - 50) + "px";
-        document.body.appendChild(sheep);
+      // Başlangıç koyunlarını oluştur
+      for (let i = 0; i < initialSheepCount; i++) {
+        spawnSheep();
       }
       
       // Kurt nesnesini oluştur
-      let wolf = document.createElement("div");
+      const wolf = document.createElement("div");
       wolf.id = "wolf";
       wolf.textContent = "🐺";
-      // Başlangıç konumunu rastgele belirle
-      wolf.style.left = Math.random() * (window.innerWidth - 50) + "px";
-      wolf.style.top = Math.random() * (window.innerHeight - 50) + "px";
+      let wolfPos = getRandomPosition(50, 50);
+      wolf.style.left = wolfPos.x + "px";
+      wolf.style.top = wolfPos.y + "px";
       document.body.appendChild(wolf);
       
-      // Her 1 saniyede bir kurdu yeni bir rastgele konuma taşı ve koyunlarla çarpışmayı kontrol et
-      setInterval(function() {
-        let newX = Math.random() * (window.innerWidth - 50);
-        let newY = Math.random() * (window.innerHeight - 50);
-        wolf.style.left = newX + "px";
-        wolf.style.top = newY + "px";
+      // Her 1 saniyede bir kurdu yeni rastgele konuma taşı ve koyunlarla çarpışmayı kontrol et.
+      setInterval(() => {
+        const newPos = getRandomPosition(50, 50);
+        wolf.style.left = newPos.x + "px";
+        wolf.style.top = newPos.y + "px";
         
-        // Tüm koyunları kontrol et, çakışanları kaldır
-        let sheepElements = document.getElementsByClassName("sheep");
+        // Tüm koyunları kontrol et, çarpışan varsa onları "ye" (DOM'dan kaldır)
+        const sheepElements = document.getElementsByClassName("sheep");
+        // Çarpışma kontrolünü ters sırada yapıyoruz çünkü koleksiyon değişebilir
         for (let i = sheepElements.length - 1; i >= 0; i--) {
-          let sheep = sheepElements[i];
+          const sheep = sheepElements[i];
           if (isColliding(wolf, sheep)) {
+            // Çarpışan koyunu kaldırmadan önce hareket intervalini temizle
+            clearInterval(sheep.moveInterval);
             sheep.parentNode.removeChild(sheep);
+            // Yeni bir koyun oluştur (belli bir gecikmeyle)
+            setTimeout(spawnSheep, 500);
           }
         }
       }, 1000);
