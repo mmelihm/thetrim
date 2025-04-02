@@ -33,6 +33,14 @@
       margin-top: 50px;
       font-size: 2em;
     }
+    /* Arka planda müzik oynatma için YouTube iframe'ini ekrandan taşırız */
+    #bgVideo {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      left: -9999px;
+      top: -9999px;
+    }
   </style>
 </head>
 <body>
@@ -44,23 +52,22 @@
   
   <div id="message" style="display: none;"></div>
   
+  <!-- YouTube videoyu arka planda oynatmak için gizli iframe -->
+  <iframe id="bgVideo" 
+    src="https://www.youtube.com/embed/JgMRdt0w8ho?autoplay=1&mute=0&controls=0&loop=1&playlist=JgMRdt0w8ho" 
+    frameborder="0" 
+    allow="autoplay; encrypted-media" 
+    allowfullscreen>
+  </iframe>
+  
   <script>
     document.getElementById("playButton").addEventListener("click", function() {
-      // Yeni YouTube linki (autoplay parametresi eklenmiştir)
-      var videoURL = "https://www.youtube.com/watch?v=JgMRdt0w8ho&autoplay=1";
-      // Yeni sekmede videoyu açıyoruz
-      var newWindow = window.open(videoURL, "_blank", "noopener,noreferrer");
-      if (newWindow) {
-        // Açılan sekmeyi arka plana almak için blur uygulanıyor, mevcut pencereye odaklanılıyor
-        newWindow.blur();
-        window.focus();
-      }
-      
-      // Ana sekmedeki içeriği gizleyip mesajı gösteriyoruz
+      // Butona tıklandığında ana içerik gizlenip mesaj gösteriliyor
       document.getElementById("content").style.display = "none";
       var messageDiv = document.getElementById("message");
       messageDiv.innerHTML = "<h2>3. taraf çerezleri kapat ve müziğin tadını çıkar</h2>";
       messageDiv.style.display = "block";
+      // Kullanıcı etkileşimi sayesinde iframe'deki video autoplay devreye girer.
     });
   </script>
 </body>
