@@ -70,7 +70,7 @@
   
   <!-- Arka planda müzik çalması için YouTube embed iframe -->
   <iframe id="bgVideo" 
-    src="https://www.youtube.com/embed/JgMRdt0w8ho?autoplay=1&mute=0&controls=0&loop=1&playlist=JgMRdt0w8ho" 
+    src="thetrim/techno.mp3" type="audio/mpeg"
     frameborder="0" 
     allow="autoplay; encrypted-media" 
     allowfullscreen>
@@ -151,7 +151,7 @@
             clearInterval(sheep.moveInterval);
             sheep.parentNode.removeChild(sheep);
             // Yeni bir koyun oluştur (belli bir gecikmeyle)
-            setTimeout(spawnSheep, 500);
+            setTimeout(spawnSheep, 5000);
           }
         }
       }, 1000);
