@@ -12,9 +12,15 @@
       color: #301003;
       margin: 0;
       padding: 20px;
+      position: relative;
+      overflow: hidden; /* Ekran dışına taşan nesneleri gizlemek için */
     }
     #content {
       margin-top: 50px;
+    }
+    #message {
+      margin-top: 50px;
+      font-size: 2em;
     }
     button {
       background-color: #301003;
@@ -29,17 +35,26 @@
     button:hover {
       background-color: #a11f24;
     }
-    #message {
-      margin-top: 50px;
-      font-size: 2em;
-    }
-    /* Arka planda müzik oynatma için YouTube iframe'ini ekrandan taşırız */
+    /* Arka planda müzik oynatmak için YouTube iframe'i ekrandan taşırız */
     #bgVideo {
       position: absolute;
       width: 1px;
       height: 1px;
       left: -9999px;
       top: -9999px;
+    }
+    /* Wolf stil ayarları; emoji kullanılıyor */
+    #wolf {
+      position: absolute;
+      font-size: 50px;
+      z-index: 1000;
+      transition: left 0.5s linear, top 0.5s linear;
+    }
+    /* Sheep stil ayarları; emoji kullanılıyor */
+    .sheep {
+      position: absolute;
+      font-size: 40px;
+      z-index: 500;
     }
   </style>
 </head>
@@ -52,7 +67,7 @@
   
   <div id="message" style="display: none;"></div>
   
-  <!-- YouTube videoyu arka planda oynatmak için gizli iframe -->
+  <!-- Arka planda müzik oynatmak için gizli YouTube iframe -->
   <iframe id="bgVideo" 
     src="https://www.youtube.com/embed/JgMRdt0w8ho?autoplay=1&mute=0&controls=0&loop=1&playlist=JgMRdt0w8ho" 
     frameborder="0" 
@@ -62,13 +77,64 @@
   
   <script>
     document.getElementById("playButton").addEventListener("click", function() {
-      // Butona tıklandığında ana içerik gizlenip mesaj gösteriliyor
+      // Ana içerik gizlensin, mesaj gösterilsin
       document.getElementById("content").style.display = "none";
       var messageDiv = document.getElementById("message");
       messageDiv.innerHTML = "<h2>3. taraf çerezleri kapat ve müziğin tadını çıkar</h2>";
       messageDiv.style.display = "block";
-      // Kullanıcı etkileşimi sayesinde iframe'deki video autoplay devreye girer.
+      
+      // 5 saniye sonra kurt ve koyun nesneleri ekranda belirsin
+      setTimeout(spawnWolfAndSheep, 5000);
     });
+    
+    function spawnWolfAndSheep() {
+      // Rastgele koyunları oluştur (örneğin 5 tane)
+      const numSheep = 5;
+      for (let i = 0; i < numSheep; i++) {
+        let sheep = document.createElement("div");
+        sheep.className = "sheep";
+        sheep.textContent = "🐑";
+        sheep.style.left = Math.random() * (window.innerWidth - 50) + "px";
+        sheep.style.top = Math.random() * (window.innerHeight - 50) + "px";
+        document.body.appendChild(sheep);
+      }
+      
+      // Kurt nesnesini oluştur
+      let wolf = document.createElement("div");
+      wolf.id = "wolf";
+      wolf.textContent = "🐺";
+      // Başlangıç konumunu rastgele belirle
+      wolf.style.left = Math.random() * (window.innerWidth - 50) + "px";
+      wolf.style.top = Math.random() * (window.innerHeight - 50) + "px";
+      document.body.appendChild(wolf);
+      
+      // Her 1 saniyede bir kurdu yeni bir rastgele konuma taşı ve koyunlarla çarpışmayı kontrol et
+      setInterval(function() {
+        let newX = Math.random() * (window.innerWidth - 50);
+        let newY = Math.random() * (window.innerHeight - 50);
+        wolf.style.left = newX + "px";
+        wolf.style.top = newY + "px";
+        
+        // Tüm koyunları kontrol et, çakışanları kaldır
+        let sheepElements = document.getElementsByClassName("sheep");
+        for (let i = sheepElements.length - 1; i >= 0; i--) {
+          let sheep = sheepElements[i];
+          if (isColliding(wolf, sheep)) {
+            sheep.parentNode.removeChild(sheep);
+          }
+        }
+      }, 1000);
+    }
+    
+    // Basit çarpışma kontrol fonksiyonu
+    function isColliding(el1, el2) {
+      const rect1 = el1.getBoundingClientRect();
+      const rect2 = el2.getBoundingClientRect();
+      return !(rect1.right < rect2.left || 
+               rect1.left > rect2.right || 
+               rect1.bottom < rect2.top || 
+               rect1.top > rect2.bottom);
+    }
   </script>
 </body>
 </html>
