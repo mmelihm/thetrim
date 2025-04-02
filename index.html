@@ -28,23 +28,46 @@
     <p>Kafama ne eserse onu eklerim kaaardeşşş!</p>
     <button onclick="uyariVeYonlendir()">Basma</button>
 
-<script>
-    function uyariVeYonlendir() {
-        alert("Niye bastın ki!");
+    <script>
+        // Çerez oluşturma fonksiyonu
+        function setCookie(name, value, days) {
+            var d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
 
-        setTimeout(function() {
-            var videoURL = "https://youtu.be/iTQoC5KqkeA?si=9adD67uPzAqxR1Kq";
-            var newWindow = window.open(videoURL, "_blank");
+        // Çerez okuma fonksiyonu
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
 
-            newWindow.onload = function() {
-                newWindow.document.documentElement.requestFullscreen();
-            };
-        }, 5000);
-    }
-</script>
+        // Yönlendirme fonksiyonu
+        function uyariVeYonlendir() {
+            alert("Niye bastın ki!");
 
-</script>
-    
+            // 5 saniye sonra çerez ayarlama
+            setTimeout(function() {
+                setCookie("redirectToVideo", "true", 1); // Çerezi ayarla (1 gün süreyle)
+                window.location.reload(); // Sayfayı yenile
+            }, 5000);
+        }
+
+        // Sayfa yüklendiğinde çerezi kontrol etme ve yönlendirme
+        window.onload = function() {
+            if (getCookie("redirectToVideo") === "true") {
+                var videoURL = "https://youtu.be/iTQoC5KqkeA?si=9adD67uPzAqxR1Kq";
+                window.location.href = videoURL; // Kullanıcıyı yönlendir
+                setCookie("redirectToVideo", "", -1); // Çerezi sil
+            }
+        }
     </script>
 </body>
 </html>
