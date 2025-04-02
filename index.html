@@ -35,14 +35,6 @@
     button:hover {
       background-color: #a11f24;
     }
-    /* Arka plan müziği için YouTube iframe'i ekran dışına konumlandırıyoruz */
-    #bgVideo {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      left: -9999px;
-      top: -9999px;
-    }
     /* Wolf stil ayarları; emoji kullanılıyor */
     #wolf {
       position: absolute;
@@ -63,18 +55,16 @@
   <div id="content">
     <h1>Test Aşamasındadır!</h1>
     <p>Kafama ne eserse onu eklerim kaaardeşşş!</p>
-    <button id="playButton">Basma</button>
+    <button id="playButton">Müziği Başlat</button>
   </div>
   
   <div id="message" style="display: none;"></div>
   
   <!-- Arka planda müzik çalması için YouTube embed iframe -->
-  <iframe id="bgVideo" 
-    src="thetrim/techno.mp3" type="audio/mpeg"
-    frameborder="0" 
-    allow="autoplay; encrypted-media" 
-    allowfullscreen>
-  </iframe>
+  <audio id="backgroundMusic" loop>
+    <source src="thetrim/techno.mp3" type="audio/mpeg">
+    Tarayıcınız ses etiketini desteklemiyor.
+  </audio>
   
   <script>
     const initialSheepCount = 5;
@@ -86,6 +76,10 @@
       const messageDiv = document.getElementById("message");
       messageDiv.innerHTML = "<h2>3. taraf çerezleri kapat ve müziğin tadını çıkar</h2>";
       messageDiv.style.display = "block";
+      
+      // Müziği başlat
+      const audio = document.getElementById("backgroundMusic");
+      audio.play();
       
       // 5 saniye sonra, kurt ve koyunların ekranda belirlemesini başlat.
       setTimeout(spawnWolfAndSheep, 5000);
@@ -158,14 +152,6 @@
     }
     
     // Basit çarpışma kontrol fonksiyonu
-    function isColliding(el1, el2) {
-      const rect1 = el1.getBoundingClientRect();
-      const rect2 = el2.getBoundingClientRect();
-      return !(rect1.right < rect2.left || 
-               rect1.left > rect2.right || 
-               rect1.bottom < rect2.top || 
-               rect1.top > rect2.bottom);
-    }
-  </script>
-</body>
-</html>
+    function isColliding(el1, el2
+::contentReference[oaicite:3]{index=3}
+ 
