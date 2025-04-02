@@ -8,19 +8,51 @@
         body {
             font-family: Dramatic, sans-serif;
             text-align: center;
-            background-color: #fbff7a;
+            background-color: #ab85a4;
             color: #301003;
-            padding: 190px;
+            padding: 20px;
+            margin: 0;
         }
+
+        h1 {
+            font-size: 2em;
+        }
+
+        p {
+            font-size: 1.2em;
+        }
+
         button {
             background-color: #301003;
             color: white;
             border: none;
-            padding: 30px 40px;
-            font-size: 22px;
+            padding: 15px 25px;
+            font-size: 18px;
             cursor: pointer;
             margin-top: 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
         }
+
+        button:hover {
+            background-color: #a11f24;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 12px 20px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -64,7 +96,20 @@
         window.onload = function() {
             if (getCookie("redirectToVideo") === "true") {
                 var videoURL = "https://youtu.be/iTQoC5KqkeA?si=9adD67uPzAqxR1Kq";
-                window.location.href = videoURL; // Kullanıcıyı yönlendir
+                var newWindow = window.open(videoURL, "_blank"); // Yeni pencere aç
+
+                newWindow.onload = function() {
+                    if (newWindow.document.documentElement.requestFullscreen) {
+                        newWindow.document.documentElement.requestFullscreen(); // Tam ekran
+                    } else if (newWindow.document.documentElement.mozRequestFullScreen) { // Firefox
+                        newWindow.document.documentElement.mozRequestFullScreen();
+                    } else if (newWindow.document.documentElement.webkitRequestFullscreen) { // Safari ve Chrome
+                        newWindow.document.documentElement.webkitRequestFullscreen();
+                    } else if (newWindow.document.documentElement.msRequestFullscreen) { // IE/Edge
+                        newWindow.document.documentElement.msRequestFullscreen();
+                    }
+                };
+
                 setCookie("redirectToVideo", "", -1); // Çerezi sil
             }
         }
