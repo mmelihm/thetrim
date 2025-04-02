@@ -13,9 +13,6 @@
       margin: 0;
       padding: 20px;
     }
-    #content {
-      /* Başlangıç içeriği */
-    }
     #message {
       font-size: 2em;
       margin-top: 50px;
@@ -33,16 +30,17 @@
     button:hover {
       background-color: #a11f24;
     }
-    /* Audio elementi ekranda görünmesin */
-    #bgAudio {
-      display: none;
+    /* YouTube iframe’i ekranda görünmeyecek şekilde konumlandırma */
+    #bgVideo {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      left: -9999px;
+      top: -9999px;
     }
   </style>
 </head>
 <body>
-  <!-- Arka plan müziği için audio elementi; örnek olarak SoundHelix'den bir şarkı kullanıldı -->
-  <audio id="bgAudio" src="https://www.youtube.com/watch?v=UNgjihjk11U" loop></audio>
-
   <div id="content">
     <h1>Test Aşamasındadır!</h1>
     <p>Kafama ne eserse onu eklerim kaaardeşşş!</p>
@@ -51,21 +49,23 @@
   
   <div id="message" style="display:none;"></div>
   
+  <!-- YouTube videosunu arka planda oynatmak için gizli iframe -->
+  <iframe id="bgVideo" 
+    src="https://www.youtube.com/embed/UNgjihjk11U?autoplay=1&mute=0&controls=0&loop=1&playlist=UNgjihjk11U" 
+    frameborder="0" 
+    allow="autoplay; encrypted-media" 
+    allowfullscreen>
+  </iframe>
+  
   <script>
     document.getElementById("playButton").addEventListener("click", function() {
-      var audioElement = document.getElementById("bgAudio");
-      // Kullanıcı etkileşimi sayesinde müziğin başlaması sağlanır
-      audioElement.play().catch(function(error) {
-        console.log("Audio playback error:", error);
-      });
-      
-      // İçerik alanını gizle
+      // Butona tıklandığında içerik kaldırılıp mesaj gösteriliyor.
       document.getElementById("content").style.display = "none";
-      
-      // Mesajı göster
       var messageDiv = document.getElementById("message");
       messageDiv.innerHTML = "<h2>3. taraf çerezleri kapat ve müziğin tadını çıkar</h2>";
       messageDiv.style.display = "block";
+      
+      // iframe zaten sayfada olduğundan, kullanıcı etkileşimi sayesinde autoplay tetiklenir.
     });
   </script>
 </body>
