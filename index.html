@@ -60,8 +60,11 @@
   
   <div id="message" style="display: none;"></div>
   
- <!-- Arka plan müziği için audio elementi; örnek olarak SoundHelix'den bir şarkı kullanıldı -->
-  <audio id="bgAudio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+ <audio id="bgAudio" controls autoplay loop>
+  <source src="https://github.com/mmelihm/thetrim/blob/main/techno.mp3" type="audio/mpeg">
+  Tarayıcınız audio etiketini desteklemiyor.
+</audio>
+
 
   <script>
     const initialSheepCount = 5;
