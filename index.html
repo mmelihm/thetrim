@@ -6,22 +6,17 @@
   <title>The Trim</title>
   <style>
     body {
-      font-family: Dramatic, sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
       background-color: #fbff7a;
       color: #301003;
-      padding: 20px;
       margin: 0;
+      padding: 20px;
     }
-
-    h1 {
+    #message {
       font-size: 2em;
+      margin-top: 50px;
     }
-
-    p {
-      font-size: 1.2em;
-    }
-
     button {
       background-color: #301003;
       color: white;
@@ -29,38 +24,15 @@
       padding: 15px 25px;
       font-size: 18px;
       cursor: pointer;
-      margin-top: 20px;
       border-radius: 8px;
       transition: background-color 0.3s ease;
     }
-
     button:hover {
       background-color: #a11f24;
     }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5em;
-      }
-
-      p {
-        font-size: 1em;
-      }
-
-      button {
-        font-size: 16px;
-        padding: 12px 20px;
-      }
-    }
-
-    /* Gizli video container: ekranda görünmeyecek şekilde ayarlanıyor */
-    #videoContainer {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      left: -9999px;
-      top: -9999px;
-      overflow: hidden;
+    /* Audio elementini ekranda göstermiyoruz */
+    #bgAudio {
+      display: none;
     }
   </style>
 </head>
@@ -68,28 +40,23 @@
   <h1>Test Aşamasındadır!</h1>
   <p>Kafama ne eserse onu eklerim kaaardeşşş!</p>
   <button id="playButton">Basma</button>
-  <div id="message"></div>
   
-  <!-- YouTube videosunu arka planda oynatmak için gizli iframe -->
-  <div id="videoContainer">
-    <iframe id="bgVideo" width="560" height="315" 
-      src="https://www.youtube.com/embed/iTQoC5KqkeA?autoplay=1&mute=0&controls=0&loop=1&playlist=iTQoC5KqkeA" 
-      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
-    </iframe>
-  </div>
-
+  <!-- Arka planda oynatılacak müzik; URL'yi uygun bir dosyayla değiştirin -->
+  <audio id="bgAudio" src="https://example.com/music.mp3" autoplay loop></audio>
+  
   <script>
     document.getElementById("playButton").addEventListener("click", function() {
-      alert("Niye bastın ki!");
-      
-      // Butonu gizle
-      this.style.display = "none";
-      
+      // Audio elementini sakla
+      var audioElement = document.getElementById("bgAudio");
+      // Tüm body içeriğini temizle
+      document.body.innerHTML = "";
+      // Audio elementini yeniden ekle (müzik arka planda çalmaya devam edecek)
+      document.body.appendChild(audioElement);
       // Mesajı göster
-      document.getElementById("message").innerHTML = "<h2>Müziğin tadını çıkar</h2>";
-      
-      // Video container'ı aktif hale getir (ancak ekranda görünmeyecek şekilde arka planda oynatılacak)
-      document.getElementById("videoContainer").style.display = "block";
+      var messageDiv = document.createElement("div");
+      messageDiv.id = "message";
+      messageDiv.innerHTML = "<h2>3. Taraf Çerezleri Kapat \nVE\n Müziğin Tadını Çıkar</h2>";
+      document.body.appendChild(messageDiv);
     });
   </script>
 </body>
