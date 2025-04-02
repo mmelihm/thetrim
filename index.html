@@ -13,6 +13,9 @@
       margin: 0;
       padding: 20px;
     }
+    #content {
+      margin-top: 50px;
+    }
     button {
       background-color: #301003;
       color: white;
@@ -43,18 +46,17 @@
   
   <script>
     document.getElementById("playButton").addEventListener("click", function() {
-      // YouTube video URL'sine autoplay parametresi ekliyoruz
+      // Yeni YouTube linki (autoplay parametresi eklenmiştir)
       var videoURL = "https://www.youtube.com/watch?v=JgMRdt0w8ho&autoplay=1";
-      
-      // Yeni sekmede YouTube videosunu açıyoruz
+      // Yeni sekmede videoyu açıyoruz
       var newWindow = window.open(videoURL, "_blank", "noopener,noreferrer");
       if (newWindow) {
-        // Yeni açılan sekmeyi arka plana al, mevcut pencereye odaklan
+        // Açılan sekmeyi arka plana almak için blur uygulanıyor, mevcut pencereye odaklanılıyor
         newWindow.blur();
         window.focus();
       }
       
-      // Mevcut sayfadaki içeriği gizleyip, mesajı gösteriyoruz
+      // Ana sekmedeki içeriği gizleyip mesajı gösteriyoruz
       document.getElementById("content").style.display = "none";
       var messageDiv = document.getElementById("message");
       messageDiv.innerHTML = "<h2>3. taraf çerezleri kapat ve müziğin tadını çıkar</h2>";
