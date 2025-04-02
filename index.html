@@ -1,118 +1,96 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Trim</title>
-    <style>
-        body {
-            font-family: Dramatic, sans-serif;
-            text-align: center;
-            background-color: #fbff7a;
-            color: #301003;
-            padding: 20px;
-            margin: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Trim</title>
+  <style>
+    body {
+      font-family: Dramatic, sans-serif;
+      text-align: center;
+      background-color: #fbff7a;
+      color: #301003;
+      padding: 20px;
+      margin: 0;
+    }
 
-        h1 {
-            font-size: 2em;
-        }
+    h1 {
+      font-size: 2em;
+    }
 
-        p {
-            font-size: 1.2em;
-        }
+    p {
+      font-size: 1.2em;
+    }
 
-        button {
-            background-color: #301003;
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 20px;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
+    button {
+      background-color: #301003;
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-top: 20px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
 
-        button:hover {
-            background-color: #a11f24;
-        }
+    button:hover {
+      background-color: #a11f24;
+    }
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.5em;
-            }
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5em;
+      }
 
-            p {
-                font-size: 1em;
-            }
+      p {
+        font-size: 1em;
+      }
 
-            button {
-                font-size: 16px;
-                padding: 12px 20px;
-            }
-        }
+      button {
+        font-size: 16px;
+        padding: 12px 20px;
+      }
+    }
 
-    </style>
+    /* Gizli video container: ekranda görünmeyecek şekilde ayarlanıyor */
+    #videoContainer {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      left: -9999px;
+      top: -9999px;
+      overflow: hidden;
+    }
+  </style>
 </head>
 <body>
-    <h1>Test Aşamasındadır!</h1>
-    <p>Kafama ne eserse onu eklerim kaaardeşşş!</p>
-    <button onclick="uyariVeYonlendir()">Basma</button>
+  <h1>Test Aşamasındadır!</h1>
+  <p>Kafama ne eserse onu eklerim kaaardeşşş!</p>
+  <button id="playButton">Basma</button>
+  <div id="message"></div>
+  
+  <!-- YouTube videosunu arka planda oynatmak için gizli iframe -->
+  <div id="videoContainer">
+    <iframe id="bgVideo" width="560" height="315" 
+      src="https://www.youtube.com/embed/iTQoC5KqkeA?autoplay=1&mute=0&controls=0&loop=1&playlist=iTQoC5KqkeA" 
+      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+    </iframe>
+  </div>
 
-    <script>
-        // Çerez oluşturma fonksiyonu
-        function setCookie(name, value, days) {
-            var d = new Date();
-            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-            var expires = "expires=" + d.toUTCString();
-            document.cookie = name + "=" + value + ";" + expires + ";path=/";
-        }
-
-        // Çerez okuma fonksiyonu
-        function getCookie(name) {
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-
-        // Yönlendirme fonksiyonu
-        function uyariVeYonlendir() {
-            alert("Niye bastın ki!");
-
-            // 5 saniye sonra çerez ayarlama
-            setTimeout(function() {
-                setCookie("redirectToVideo", "true", 1); // Çerezi ayarla (1 gün süreyle)
-                window.location.reload(); // Sayfayı yenile
-            }, 5000);
-        }
-
-        // Sayfa yüklendiğinde çerezi kontrol etme ve yönlendirme
-        window.onload = function() {
-            if (getCookie("redirectToVideo") === "true") {
-                var videoURL = "https://youtu.be/iTQoC5KqkeA?si=9adD67uPzAqxR1Kq";
-                var newWindow = window.open(videoURL, "_blank"); // Yeni pencere aç
-
-                newWindow.onload = function() {
-                    if (newWindow.document.documentElement.requestFullscreen) {
-                        newWindow.document.documentElement.requestFullscreen(); // Tam ekran
-                    } else if (newWindow.document.documentElement.mozRequestFullScreen) { // Firefox
-                        newWindow.document.documentElement.mozRequestFullScreen();
-                    } else if (newWindow.document.documentElement.webkitRequestFullscreen) { // Safari ve Chrome
-                        newWindow.document.documentElement.webkitRequestFullscreen();
-                    } else if (newWindow.document.documentElement.msRequestFullscreen) { // IE/Edge
-                        newWindow.document.documentElement.msRequestFullscreen();
-                    }
-                };
-
-                setCookie("redirectToVideo", "", -1); // Çerezi sil
-            }
-        }
-    </script>
+  <script>
+    document.getElementById("playButton").addEventListener("click", function() {
+      alert("Niye bastın ki!");
+      
+      // Butonu gizle
+      this.style.display = "none";
+      
+      // Mesajı göster
+      document.getElementById("message").innerHTML = "<h2>Müziğin tadını çıkar</h2>";
+      
+      // Video container'ı aktif hale getir (ancak ekranda görünmeyecek şekilde arka planda oynatılacak)
+      document.getElementById("videoContainer").style.display = "block";
+    });
+  </script>
 </body>
 </html>
