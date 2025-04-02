@@ -35,14 +35,6 @@
     button:hover {
       background-color: #a11f24;
     }
-    /* Arka plan müziği için YouTube iframe'i ekran dışına konumlandırıyoruz */
-    #bgVideo {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      left: -9999px;
-      top: -9999px;
-    }
     /* Wolf stil ayarları; emoji kullanılıyor */
     #wolf {
       position: absolute;
@@ -68,12 +60,9 @@
   
   <div id="message" style="display: none;"></div>
   
-  <audio id="backgroundMusic" autoplay loop>
-    <source src="thetrim/techno.mp3" type="audio/mpeg">
-    Tarayıcınız ses etiketini desteklemiyor.
-  </audio>
+ <!-- Arka plan müziği için audio elementi; örnek olarak SoundHelix'den bir şarkı kullanıldı -->
+  <audio id="bgAudio" src="https://soundcloud.com/melih-menderes/techno?si=8d399359075f458bbdda435a8e23e18e&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing" loop></audio>
 
-  
   <script>
     const initialSheepCount = 5;
     let sheepSpeedInterval = 2000; // koyunların yeni konuma geçme süresi (ms)
