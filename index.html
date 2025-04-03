@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Trim</title>
-  <!-- Favicon'u ekleyin. Eğer favicon dosyanız depo kökünde ise; -->
+  <!-- Favicon -->
   <link rel="icon" href="fenrir.png" type="image/png">
-  <!-- Eğer dosya bir alt klasördeyse (örneğin, "images"), aşağıdaki gibi kullanın: -->
-  <!-- <link rel="icon" href="images/favicon.ico" type="image/x-icon"> -->
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -19,7 +17,35 @@
       position: relative;
       overflow: hidden;
     }
-    /* Diğer stil ayarları... */
+    /* İstediğiniz buton stiline göre */
+    button {
+      background-color: #301003;
+      color: white;
+      border: none;
+      padding: 30px 40px;
+      font-size: 22px;
+      cursor: pointer;
+      margin-top: 20px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #a11f24;
+    }
+    /* Wolf stil ayarları; emoji kullanılıyor */
+    #wolf {
+      position: absolute;
+      font-size: 50px;
+      z-index: 1000;
+      transition: left 0.3s linear, top 0.3s linear;
+    }
+    /* Sheep stil ayarları; emoji kullanılıyor */
+    .sheep {
+      position: absolute;
+      font-size: 40px;
+      z-index: 500;
+      transition: left 1.5s ease, top 1.5s ease;
+    }
   </style>
 </head>
 <body>
@@ -37,9 +63,8 @@
   </audio>
   
   <script>
-    // (JavaScript kodlarınız burada devam ediyor...)
     const initialSheepCount = 5;
-    let sheepSpeedInterval = 2000;
+    let sheepSpeedInterval = 2000; // Koyunların konum değiştirme süresi (ms)
     
     document.getElementById("playButton").addEventListener("click", function() {
       document.getElementById("content").style.display = "none";
@@ -47,7 +72,7 @@
       messageDiv.innerHTML = "<h2>3. taraf çerezleri kapat ve müziğin tadını çıkar</h2>";
       messageDiv.style.display = "block";
       
-      // Müzik oynatılıyor
+      // Müzik oynatılıyor (kullanıcı etkileşimi sayesinde autoplay kısıtlamaları aşılır)
       const audio = document.getElementById("bgAudio");
       audio.play().catch(error => {
         console.error("Müzik çalınırken bir hata oluştu:", error);
@@ -57,12 +82,14 @@
       setTimeout(spawnWolfAndSheep, 5000);
     });
     
+    // Rastgele konum döndüren yardımcı fonksiyon
     function getRandomPosition(elementWidth, elementHeight) {
       const x = Math.random() * (window.innerWidth - elementWidth);
       const y = Math.random() * (window.innerHeight - elementHeight);
       return { x, y };
     }
     
+    // Yeni koyun oluşturma fonksiyonu
     function spawnSheep() {
       const sheep = document.createElement("div");
       sheep.className = "sheep";
@@ -72,6 +99,7 @@
       sheep.style.top = pos.y + "px";
       document.body.appendChild(sheep);
       
+      // Koyun, belirli aralıklarla rastgele hareket etsin
       sheep.moveInterval = setInterval(() => {
         const newPos = getRandomPosition(50, 50);
         sheep.style.left = newPos.x + "px";
@@ -81,11 +109,14 @@
       return sheep;
     }
     
+    // Wolf ve koyunların oluşturulması, hareketi ve kovalama fonksiyonu
     function spawnWolfAndSheep() {
+      // Başlangıç koyunlarını oluştur
       for (let i = 0; i < initialSheepCount; i++) {
         spawnSheep();
       }
       
+      // Kurt nesnesini oluştur
       const wolf = document.createElement("div");
       wolf.id = "wolf";
       wolf.textContent = "🐺";
@@ -94,6 +125,7 @@
       wolf.style.top = wolfPos.y + "px";
       document.body.appendChild(wolf);
       
+      // Her 500ms’de bir, kurt en yakın koyuna doğru hareket etsin
       setInterval(() => {
         const sheepElements = document.getElementsByClassName("sheep");
         if (sheepElements.length > 0) {
@@ -102,43 +134,53 @@
           const wolfX = parseFloat(wolf.style.left);
           const wolfY = parseFloat(wolf.style.top);
           
+          // En yakın koyunu bul
           for (let i = 0; i < sheepElements.length; i++) {
             const sheep = sheepElements[i];
             const sheepX = parseFloat(sheep.style.left);
             const sheepY = parseFloat(sheep.style.top);
             const dx = sheepX - wolfX;
             const dy = sheepY - wolfY;
-            const distance = Math.sqrt(dx*dx + dy*dy);
+            const distance = Math.sqrt(dx * dx + dy * dy);
             if (distance < minDistance) {
               minDistance = distance;
               targetSheep = sheep;
             }
           }
           
+          // Hedef koyunun yönüne doğru hareket et (step: 20 piksel)
           const targetX = parseFloat(targetSheep.style.left);
           const targetY = parseFloat(targetSheep.style.top);
-          const newX = wolfX + (targetX - wolfX) * 0.3;
-          const newY = wolfY + (targetY - wolfY) * 0.3;
+          const deltaX = targetX - wolfX;
+          const deltaY = targetY - wolfY;
+          const angle = Math.atan2(deltaY, deltaX);
+          const step = 20;
+          const newX = wolfX + step * Math.cos(angle);
+          const newY = wolfY + step * Math.sin(angle);
           wolf.style.left = newX + "px";
           wolf.style.top = newY + "px";
         } else {
+          // Koyun kalmadıysa rastgele hareket etsin
           const newPos = getRandomPosition(50, 50);
           wolf.style.left = newPos.x + "px";
           wolf.style.top = newPos.y + "px";
         }
         
+        // Tüm koyunları kontrol et; çarpışma varsa, koyunu "ye" (DOM'dan kaldır)
         const sheepElementsAfter = document.getElementsByClassName("sheep");
         for (let i = sheepElementsAfter.length - 1; i >= 0; i--) {
           const sheep = sheepElementsAfter[i];
           if (isColliding(wolf, sheep)) {
             clearInterval(sheep.moveInterval);
             sheep.parentNode.removeChild(sheep);
+            // 5 saniye sonra yeni koyun ekle
             setTimeout(spawnSheep, 5000);
           }
         }
-      }, 1000);
+      }, 500);
     }
     
+    // Basit çarpışma kontrol fonksiyonu
     function isColliding(el1, el2) {
       const rect1 = el1.getBoundingClientRect();
       const rect2 = el2.getBoundingClientRect();
