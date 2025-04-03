@@ -60,12 +60,11 @@
   
   <div id="message" style="display: none;"></div>
   
- <audio id="bgAudio" controls autoplay loop>
-  <source src="techno.mp3" type="audio/mpeg">
-  Tarayıcınız audio etiketini desteklemiyor.
-</audio>
-
-
+  <!-- Arka plan müziği için audio elementi (gizli şekilde oynatılır) -->
+  <audio id="bgAudio" src="techno.mp3" autoplay loop style="display: none;">
+    Tarayıcınız audio etiketini desteklemiyor.
+  </audio>
+  
   <script>
     const initialSheepCount = 5;
     let sheepSpeedInterval = 2000; // koyunların yeni konuma geçme süresi (ms)
@@ -76,6 +75,12 @@
       const messageDiv = document.getElementById("message");
       messageDiv.innerHTML = "<h2>3. taraf çerezleri kapat ve müziğin tadını çıkar</h2>";
       messageDiv.style.display = "block";
+      
+      // Müzik çalmaya başlasın (kullanıcı etkileşimi sayesinde autoplay kısıtlamaları aşılır)
+      const audio = document.getElementById("bgAudio");
+      audio.play().catch(error => {
+        console.error("Müzik çalınırken bir hata oluştu:", error);
+      });
       
       // 5 saniye sonra, kurt ve koyunların ekranda belirlemesini başlat.
       setTimeout(spawnWolfAndSheep, 5000);
@@ -93,7 +98,7 @@
       const sheep = document.createElement("div");
       sheep.className = "sheep";
       sheep.textContent = "🐑";
-      // Başlangıç konumunu belirle (yaklaşık 40px genişlik)
+      // Başlangıç konumunu belirle (yaklaşık 50px genişlik)
       const pos = getRandomPosition(50, 50);
       sheep.style.left = pos.x + "px";
       sheep.style.top = pos.y + "px";
@@ -109,7 +114,7 @@
       return sheep;
     }
     
-    // Wolf (kurt) ve koyunların oluşturulması ve hareketleri
+    // Wolf (kurt) ve koyunların oluşturulması, hareket ve kovalama fonksiyonu
     function spawnWolfAndSheep() {
       // Başlangıç koyunlarını oluştur
       for (let i = 0; i < initialSheepCount; i++) {
@@ -125,19 +130,47 @@
       wolf.style.top = wolfPos.y + "px";
       document.body.appendChild(wolf);
       
-      // Her 1 saniyede bir kurdu yeni rastgele konuma taşı ve koyunlarla çarpışmayı kontrol et.
+      // Wolf'u, her 1 saniyede bir en yakın koyuna doğru kovalasın
       setInterval(() => {
-        const newPos = getRandomPosition(50, 50);
-        wolf.style.left = newPos.x + "px";
-        wolf.style.top = newPos.y + "px";
-        
-        // Tüm koyunları kontrol et, çarpışan varsa onları "ye" (DOM'dan kaldır)
         const sheepElements = document.getElementsByClassName("sheep");
-        // Çarpışma kontrolünü ters sırada yapıyoruz çünkü koleksiyon değişebilir
-        for (let i = sheepElements.length - 1; i >= 0; i--) {
-          const sheep = sheepElements[i];
+        if(sheepElements.length > 0) {
+          let targetSheep = sheepElements[0];
+          let minDistance = Infinity;
+          const wolfX = parseFloat(wolf.style.left);
+          const wolfY = parseFloat(wolf.style.top);
+          // En yakın koyunu bul
+          for (let i = 0; i < sheepElements.length; i++) {
+            const sheep = sheepElements[i];
+            const sheepX = parseFloat(sheep.style.left);
+            const sheepY = parseFloat(sheep.style.top);
+            const dx = sheepX - wolfX;
+            const dy = sheepY - wolfY;
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            if(distance < minDistance) {
+              minDistance = distance;
+              targetSheep = sheep;
+            }
+          }
+          // Kurt, hedef koyunun konumuna doğru adım adım ilerler (yaklaşık %30'luk ilerleme)
+          const targetX = parseFloat(targetSheep.style.left);
+          const targetY = parseFloat(targetSheep.style.top);
+          const newX = wolfX + (targetX - wolfX) * 0.3;
+          const newY = wolfY + (targetY - wolfY) * 0.3;
+          wolf.style.left = newX + "px";
+          wolf.style.top = newY + "px";
+        } else {
+          // Koyun yoksa rastgele hareket etsin
+          const newPos = getRandomPosition(50, 50);
+          wolf.style.left = newPos.x + "px";
+          wolf.style.top = newPos.y + "px";
+        }
+        
+        // Tüm koyunları kontrol et; çarpışma varsa, koyunu "ye" (DOM'dan kaldır)
+        const sheepElementsAfter = document.getElementsByClassName("sheep");
+        for (let i = sheepElementsAfter.length - 1; i >= 0; i--) {
+          const sheep = sheepElementsAfter[i];
           if (isColliding(wolf, sheep)) {
-            // Çarpışan koyunu kaldırmadan önce hareket intervalini temizle
+            // Çarpışan koyunun hareket intervalini temizle ve DOM'dan kaldır
             clearInterval(sheep.moveInterval);
             sheep.parentNode.removeChild(sheep);
             // Yeni bir koyun oluştur (belli bir gecikmeyle)
