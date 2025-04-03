@@ -66,8 +66,8 @@
   </audio>
   
   <script>
-    const initialSheepCount = 5;
-    let sheepSpeedInterval = 2000; // koyunların yeni konuma geçme süresi (ms)
+    const initialSheepCount = 10;
+    let sheepSpeedInterval = 500; // koyunların yeni konuma geçme süresi (ms)
     
     document.getElementById("playButton").addEventListener("click", function() {
       // Butona tıklandığında, ana içerik gizlenip mesaj gösterilsin.
@@ -83,7 +83,7 @@
       });
       
       // 5 saniye sonra, kurt ve koyunların ekranda belirlemesini başlat.
-      setTimeout(spawnWolfAndSheep, 5000);
+      setTimeout(spawnWolfAndSheep, 500);
     });
     
     // Rastgele konum döndüren yardımcı fonksiyon
@@ -174,7 +174,7 @@
             clearInterval(sheep.moveInterval);
             sheep.parentNode.removeChild(sheep);
             // Yeni bir koyun oluştur (belli bir gecikmeyle)
-            setTimeout(spawnSheep, 5000);
+            setTimeout(spawnSheep, 1000);
           }
         }
       }, 1000);
