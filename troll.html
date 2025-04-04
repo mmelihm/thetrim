@@ -9,15 +9,47 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
       background-color: #fbff7a;
       color: #301003;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       position: relative;
       overflow: hidden;
     }
-    /* İstediğiniz buton stiline göre */
+    /* Sabit header (navigasyon) */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #301003;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      box-sizing: border-box;
+      z-index: 2000;
+    }
+    header img {
+      height: 40px;
+      cursor: pointer;
+    }
+    nav {
+      margin-left: auto;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 18px;
+    }
+    /* İçerik, header yüksekliği kadar üst boşluk bırak */
+    #content {
+      margin-top: 70px;
+      text-align: center;
+      padding: 20px;
+    }
+    /* Buton stil ayarları */
     button {
       background-color: #301003;
       color: white;
@@ -46,9 +78,26 @@
       z-index: 500;
       transition: left 1.5s ease, top 1.5s ease;
     }
+    /* Mesaj alanı */
+    #message {
+      text-align: center;
+      font-size: 2em;
+      margin-top: 40px;
+    }
   </style>
 </head>
 <body>
+  <!-- Sabit navigasyon header'ı -->
+  <header>
+    <img id="logo" src="fenrir.png" alt="Logo">
+    <nav>
+      <a href="index.html">Ana Sayfa</a>
+      <a href="troll.html">Girme</a>
+      <a href="contact.html">İletişim</a>
+    </nav>
+  </header>
+
+  <!-- Ana içerik -->
   <div id="content">
     <h1>Test Aşamasındadır!</h1>
     <p>Kafama ne eserse onu eklerim kaaardeşşş!</p>
@@ -148,7 +197,7 @@
             }
           }
           
-          // Hedef koyunun yönüne doğru hareket et (step: 20 piksel)
+          // Hedef koyunun yönüne doğru hareket et (step: 50 piksel)
           const targetX = parseFloat(targetSheep.style.left);
           const targetY = parseFloat(targetSheep.style.top);
           const deltaX = targetX - wolfX;
