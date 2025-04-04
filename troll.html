@@ -43,7 +43,7 @@
       margin-left: 20px;
       font-size: 18px;
     }
-    /* İçerik, header yüksekliği kadar üst boşluk bırak */
+    /* İçerik bölümü */
     #content {
       margin-top: 70px;
       text-align: center;
@@ -78,11 +78,11 @@
       z-index: 500;
       transition: left 1.5s ease, top 1.5s ease;
     }
-    /* Mesaj alanı */
+    /* Mesaj bölümü: Header ile çakışmaması için üst boşluk ekledik */
     #message {
       text-align: center;
       font-size: 2em;
-      margin-top: 40px;
+      margin-top: 80px;
     }
   </style>
 </head>
@@ -121,13 +121,13 @@
       messageDiv.innerHTML = "<h2>3. taraf çerezleri kapat ve müziğin tadını çıkar</h2>";
       messageDiv.style.display = "block";
       
-      // Müzik oynatılıyor (kullanıcı etkileşimi sayesinde autoplay kısıtlamaları aşılır)
+      // Müzik oynatılıyor
       const audio = document.getElementById("bgAudio");
       audio.play().catch(error => {
         console.error("Müzik çalınırken bir hata oluştu:", error);
       });
       
-      // 5 saniye sonra kurt ve koyunlar başlasın
+      // 5 saniye sonra, kurt ve koyunlar başlasın
       setTimeout(spawnWolfAndSheep, 5000);
     });
     
